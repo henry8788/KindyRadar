@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__figma-remote-mcp__get_design_context",
+      "mcp__figma-remote-mcp__get_metadata",
+      "Bash(tree -L 3 /Users/henry/Documents/KindyRadar -I \".git|.DS_Store\" 2>/dev/null || find /Users/henry/Documents/KindyRadar -type d -not -path \"*/\\\\.*\" | head -30)"
+    ]
+  }
+}
