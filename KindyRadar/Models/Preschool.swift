@@ -47,6 +47,29 @@ struct Preschool: Identifiable {
     let id: String
     let name: String
     let district: String
+    let fullAddress: String
     let type: SchoolType
+    let quasiPublicPeriod: String?    // 準公共化期間，如 "113-115"
     let violationStatus: ViolationStatus
+
+    // 基本資訊
+    let monthlyFee: Int?              // 每月學費
+    let principalName: String?        // 負責人
+    let phone: String?                // 聯絡電話
+
+    // 設施規模
+    let approvedCapacity: Int?        // 核定人數
+    let floors: String?               // 樓層資訊
+    let totalArea: Double?            // 總面積（平方公尺）
+    let indoorArea: Double?           // 室內面積
+    let outdoorArea: Double?          // 室外面積
+    let afterSchoolCare: String?      // 課後留園
+
+    // 核准立案
+    let registrationNo1: String?      // 文號（一）
+    let registrationNo2: String?      // 文號（二）
+    let registrationDate: String?     // 立案日期
+
+    // 裁罰記錄
+    let violations: [Violation]
 }

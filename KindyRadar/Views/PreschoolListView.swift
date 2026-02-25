@@ -4,6 +4,12 @@ struct PreschoolListView: View {
     @StateObject private var viewModel = PreschoolListViewModel()
 
     var body: some View {
+        NavigationStack {
+            listBody
+        }
+    }
+
+    private var listBody: some View {
         ZStack(alignment: .top) {
             // 背景色
             Color(hex: "#f2f2f7")
@@ -30,6 +36,7 @@ struct PreschoolListView: View {
         .task {
             await viewModel.loadData()
         }
+        .navigationBarHidden(true)
     }
 
     // MARK: - Header
@@ -50,9 +57,22 @@ struct PreschoolListView: View {
 
                 Spacer()
 
-                Button("篩選") { }
-                    .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(Color(hex: "#2094f3"))
+                NavigationLink(destination: FilterView(
+                    current: viewModel.filterCriteria,
+                    onApply: { viewModel.applyFilterCriteria($0) }
+                )) {
+                    ZStack(alignment: .topTrailing) {
+                        Text("篩選")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundStyle(Color(hex: "#2094f3"))
+                        if viewModel.hasActiveFilter {
+                            Circle()
+                                .fill(Color(hex: "#e53e3e"))
+                                .frame(width: 8, height: 8)
+                                .offset(x: 4, y: -2)
+                        }
+                    }
+                }
             }
             .padding(.horizontal, 16)
             .padding(.top, 24)
@@ -135,7 +155,10 @@ struct PreschoolListView: View {
                 .padding(.top, 40)
         case .success(let preschools):
             ForEach(preschools) { preschool in
-                PreschoolCardView(preschool: preschool)
+                NavigationLink(destination: PreschoolDetailView(preschool: preschool)) {
+                    PreschoolCardView(preschool: preschool)
+                }
+                .buttonStyle(.plain)
             }
         case .empty:
             ContentUnavailableView(
@@ -194,3 +217,4 @@ private struct TypeFilterChip: View {
     PreschoolListView()
         .preferredColorScheme(.dark)
 }
+

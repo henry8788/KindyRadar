@@ -103,22 +103,9 @@ extension Color {
 
 #Preview {
     VStack(spacing: 12) {
-        PreschoolCardView(preschool: Preschool(
-            id: "1", name: "愛丁堡幼兒園", district: "台中市北屯區",
-            type: .public_, violationStatus: .count(2)
-        ))
-        PreschoolCardView(preschool: Preschool(
-            id: "2", name: "快樂森林幼兒園", district: "台北市大安區",
-            type: .quasiPublic, violationStatus: .none
-        ))
-        PreschoolCardView(preschool: Preschool(
-            id: "3", name: "小哈佛國際幼兒園", district: "高雄市左營區",
-            type: .private_, violationStatus: .count(1)
-        ))
-        PreschoolCardView(preschool: Preschool(
-            id: "4", name: "蒙特梭利學園", district: "新竹市東區",
-            type: .nonprofit, violationStatus: .none
-        ))
+        ForEach(Preschool.mockData) { preschool in
+            PreschoolCardView(preschool: preschool)
+        }
     }
     .padding()
     .background(Color(hex: "#f2f2f7"))
