@@ -20,39 +20,46 @@ class PreschoolListViewModel: ObservableObject {
     @Published var selectedType: SchoolType = .all
     @Published var filterCriteria: FilterCriteria = FilterCriteria()
 
+    private let _service: PreschoolServiceProtocol
     private var _allPreschools: [Preschool] = []
     private var _cancellables = Set<AnyCancellable>()
 
-    init() {
+    init(service: PreschoolServiceProtocol = PreschoolService()) {
+        self._service = service
         setupFiltering()
     }
 
-    // MARK: - 載入資料（目前使用 Mock）
+    // MARK: - 載入資料
 
     func loadData() async {
         guard case .idle = state else { return }
         state = .loading
-
-        // TODO: 替換為 RealService
-        try? await Task.sleep(nanoseconds: 500_000_000)
-        #if DEBUG
-        _allPreschools = Preschool.mockData
-        #else
-        _allPreschools = []
-        #endif
-
-        applyFilter()
+        do {
+            _allPreschools = try await _service.fetchPreschools()
+            applyFilter()
+        } catch let error as AppError {
+            print("❌ [ViewModel] loadData error: \(error.errorDescription ?? "")")
+            state = .error(error.errorDescription ?? "發生未知錯誤")
+        } catch {
+            print("❌ [ViewModel] loadData unknown error: \(error)")
+            state = .error(AppError.unknown.errorDescription!)
+        }
     }
 
     func refresh() async {
         state = .loading
-        try? await Task.sleep(nanoseconds: 500_000_000)
-        applyFilter()
+        do {
+            _allPreschools = try await _service.fetchPreschools()
+            applyFilter()
+        } catch let error as AppError {
+            state = .error(error.errorDescription ?? "發生未知錯誤")
+        } catch {
+            state = .error(AppError.unknown.errorDescription!)
+        }
     }
 
     func applyFilterCriteria(_ criteria: FilterCriteria) {
         filterCriteria = criteria
-        // 同步 selectedType 讓主頁 Tab 也跟著更新
         selectedType = criteria.schoolType
         applyFilter()
     }
@@ -69,17 +76,14 @@ class PreschoolListViewModel: ObservableObject {
     private func applyFilter() {
         var result = _allPreschools
 
-        // 類型（主頁 Tab 或篩選頁）
         if selectedType != .all {
             result = result.filter { $0.type == selectedType }
         }
 
-        // 縣市
         if filterCriteria.city != .all {
             result = result.filter { $0.district.contains(filterCriteria.city.rawValue) }
         }
 
-        // 裁罰狀態
         switch filterCriteria.penaltyFilter {
         case .all:
             break
@@ -89,7 +93,6 @@ class PreschoolListViewModel: ObservableObject {
             result = result.filter { !$0.violationStatus.isClean }
         }
 
-        // 關鍵字搜尋
         if !searchText.isEmpty {
             result = result.filter {
                 $0.name.contains(searchText) || $0.district.contains(searchText)
@@ -98,6 +101,8 @@ class PreschoolListViewModel: ObservableObject {
 
         state = result.isEmpty ? .empty : .success(result)
     }
+
+    // MARK: - Computed
 
     var resultCountText: String {
         guard case .success(let items) = state else { return "" }

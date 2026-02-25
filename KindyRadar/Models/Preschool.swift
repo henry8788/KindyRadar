@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - 幼兒園類型
 
-enum SchoolType: String, CaseIterable, Identifiable {
+enum SchoolType: String, CaseIterable, Identifiable, Codable {
     case all = "全部"
     case public_ = "公立"
     case quasiPublic = "準公共化"
@@ -24,7 +24,7 @@ enum SchoolType: String, CaseIterable, Identifiable {
 
 // MARK: - 違規狀態
 
-enum ViolationStatus {
+enum ViolationStatus: Codable {
     case none
     case count(Int)
 
@@ -43,7 +43,7 @@ enum ViolationStatus {
 
 // MARK: - 幼兒園
 
-struct Preschool: Identifiable {
+struct Preschool: Identifiable, Codable {
     let id: String
     let name: String
     let district: String

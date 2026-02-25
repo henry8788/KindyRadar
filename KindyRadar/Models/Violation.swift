@@ -1,6 +1,6 @@
 import Foundation
 
-struct Violation: Identifiable {
+struct Violation: Identifiable, Codable {
     let id: String
     let perpetrator: String   // 行為人
     let date: String          // 裁罰日期
