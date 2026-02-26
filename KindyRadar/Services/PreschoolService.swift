@@ -2,7 +2,7 @@ import Foundation
 
 final class PreschoolService: PreschoolServiceProtocol {
     private let cache = CacheManager.shared
-    private let cacheKey = "preschools_v1"
+    private let cacheKey = "preschools_v2"
 
     private let preschoolsURL = URL(string: "https://kiang.github.io/ap.ece.moe.edu.tw/preschools.json")!
     private let punishURL     = URL(string: "https://kiang.github.io/ap.ece.moe.edu.tw/punish_all.json")!
@@ -130,7 +130,7 @@ final class PreschoolService: PreschoolServiceProtocol {
         return Preschool(
             id: p.id,
             name: p.title,
-            district: "\(p.city)\(p.town)",
+            district: p.town == p.city ? p.city : "\(p.city)\(p.town)",
             fullAddress: p.address,
             type: schoolType,
             quasiPublicPeriod: p.prePublic,
