@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import CoreLocation
 
 // MARK: - ViewState
 
@@ -19,6 +20,10 @@ class PreschoolListViewModel: ObservableObject {
     @Published var searchText: String = ""
     @Published var selectedType: SchoolType = .all
     @Published var filterCriteria: FilterCriteria = FilterCriteria()
+
+    var userLocation: CLLocation? = nil {
+        didSet { applyFilter() }
+    }
 
     private let _service: PreschoolServiceProtocol
     private var _allPreschools: [Preschool] = []
@@ -96,6 +101,21 @@ class PreschoolListViewModel: ObservableObject {
         if !searchText.isEmpty {
             result = result.filter {
                 $0.name.contains(searchText) || $0.district.contains(searchText)
+            }
+        }
+
+        // 有使用者位置時，依距離由近到遠排序
+        if let location = userLocation {
+            result = result.sorted { a, b in
+                let distA = a.distance(from: location)
+                let distB = b.distance(from: location)
+                // 沒有座標的排到最後
+                switch (distA, distB) {
+                case let (da?, db?): return da < db
+                case (_?, nil):     return true
+                case (nil, _?):     return false
+                case (nil, nil):    return false
+                }
             }
         }
 

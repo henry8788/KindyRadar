@@ -123,6 +123,10 @@ final class PreschoolService: PreschoolServiceProtocol {
         let schoolType = parseSchoolType(p.type, prePublic: p.prePublic)
         let violationStatus: ViolationStatus = violations.isEmpty ? .none : .count(violations.count)
 
+        // GeoJSON coordinates 格式：[longitude, latitude]
+        let longitude = feature.geometry?.coordinates.first
+        let latitude = feature.geometry?.coordinates.count ?? 0 > 1 ? feature.geometry?.coordinates[1] : nil
+
         return Preschool(
             id: p.id,
             name: p.title,
@@ -143,6 +147,8 @@ final class PreschoolService: PreschoolServiceProtocol {
             registrationNo1: p.regNo,
             registrationNo2: p.regDocno,
             registrationDate: p.regDate?.replacingOccurrences(of: "/", with: " / "),
+            latitude: latitude,
+            longitude: longitude,
             violations: violations
         )
     }
@@ -150,8 +156,9 @@ final class PreschoolService: PreschoolServiceProtocol {
     // MARK: - Private — 解析類型
 
     private func parseSchoolType(_ raw: String, prePublic: String?) -> SchoolType {
-        // 有準公共化期間的私立園 → 準公共化
-        if let period = prePublic, !period.isEmpty {
+        // pre_public 有實際期間值（如 "113-115"）才算準公共化
+        // 回傳 nil、""、"無" 都視為私立
+        if let period = prePublic, !period.isEmpty, period != "無" {
             return .quasiPublic
         }
         switch raw {

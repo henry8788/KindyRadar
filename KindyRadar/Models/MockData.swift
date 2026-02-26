@@ -21,6 +21,8 @@ extension Preschool {
             registrationNo1: "中市教特(一)字第1130083341號",
             registrationNo2: "中市教國字第28710號",
             registrationDate: "1996 / 08 / 17",
+            latitude: 24.1717,
+            longitude: 120.6856,
             violations: [
                 Violation(
                     id: "v1",
@@ -58,6 +60,8 @@ extension Preschool {
             registrationNo1: "北市教特(一)字第1130012345號",
             registrationNo2: nil,
             registrationDate: "2003 / 03 / 15",
+            latitude: 25.0330,
+            longitude: 121.5654,
             violations: []
         ),
         Preschool(
@@ -80,6 +84,8 @@ extension Preschool {
             registrationNo1: "高市教特(一)字第1130056789號",
             registrationNo2: "高市教國字第11230號",
             registrationDate: "1999 / 05 / 20",
+            latitude: 22.6803,
+            longitude: 120.2972,
             violations: [
                 Violation(
                     id: "v3",
@@ -110,6 +116,8 @@ extension Preschool {
             registrationNo1: "竹市教特(一)字第1130078901號",
             registrationNo2: nil,
             registrationDate: "2008 / 09 / 01",
+            latitude: 24.8138,
+            longitude: 120.9675,
             violations: []
         )
     ]

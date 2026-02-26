@@ -6,7 +6,7 @@ enum City: String, CaseIterable, Identifiable {
     case all = "全部"
     case taipei = "台北市"
     case newTaipei = "新北市"
-    case taichung = "台中市"
+    case taichung = "臺中市"
     case tainan = "台南市"
     case kaohsiung = "高雄市"
     case taoyuan = "桃園市"

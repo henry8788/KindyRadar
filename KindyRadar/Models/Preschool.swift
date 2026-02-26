@@ -1,4 +1,5 @@
 import Foundation
+import CoreLocation
 
 // MARK: - 幼兒園類型
 
@@ -70,6 +71,17 @@ struct Preschool: Identifiable, Codable {
     let registrationNo2: String?      // 文號（二）
     let registrationDate: String?     // 立案日期
 
+    // 地理座標
+    let latitude: Double?             // 緯度
+    let longitude: Double?            // 經度
+
     // 裁罰記錄
     let violations: [Violation]
+
+    /// 回傳與使用者位置的距離（公尺），若無座標則為 nil
+    func distance(from userLocation: CLLocation) -> Double? {
+        guard let lat = latitude, let lon = longitude else { return nil }
+        let location = CLLocation(latitude: lat, longitude: lon)
+        return userLocation.distance(from: location)
+    }
 }

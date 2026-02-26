@@ -1,7 +1,9 @@
 import SwiftUI
+import CoreLocation
 
 struct PreschoolListView: View {
     @StateObject private var viewModel = PreschoolListViewModel()
+    @StateObject private var locationManager = LocationManager()
 
     var body: some View {
         NavigationStack {
@@ -34,7 +36,11 @@ struct PreschoolListView: View {
             headerView
         }
         .task {
+            locationManager.requestLocation()
             await viewModel.loadData()
+        }
+        .onChange(of: locationManager.userLocation) { _, newLocation in
+            viewModel.userLocation = newLocation
         }
         .navigationBarHidden(true)
     }
@@ -86,13 +92,24 @@ struct PreschoolListView: View {
             typeFilterBar
                 .padding(.top, 8)
 
-            // 結果數量
+            // 結果數量 + 排序提示
             if !viewModel.resultCountText.isEmpty {
                 HStack {
                     Text(viewModel.resultCountText)
                         .font(.system(size: 14))
                         .foregroundStyle(Color(hex: "#64748b"))
+
                     Spacer()
+
+                    if locationManager.userLocation != nil {
+                        HStack(spacing: 3) {
+                            Image(systemName: "location.fill")
+                                .font(.system(size: 11))
+                            Text("依距離排序")
+                                .font(.system(size: 12))
+                        }
+                        .foregroundStyle(Color(hex: "#2094f3"))
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 4)
