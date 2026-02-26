@@ -112,7 +112,7 @@ struct PreschoolListView: View {
                         HStack(spacing: 3) {
                             Image(systemName: "location.fill")
                                 .font(.system(size: 11))
-                            Text("依距離排序")
+                            Text("依您目前位置由近到遠排序")
                                 .font(.system(size: 12))
                         }
                         .foregroundStyle(Color(hex: "#2094f3"))
