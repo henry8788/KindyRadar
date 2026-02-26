@@ -41,7 +41,7 @@ class PreschoolListViewModel: ObservableObject {
         state = .loading
         do {
             _allPreschools = try await _service.fetchPreschools()
-            applyFilter()
+            applyFilter(ignoreLoadingState: true)
         } catch let error as AppError {
             print("❌ [ViewModel] loadData error: \(error.errorDescription ?? "")")
             state = .error(error.errorDescription ?? "發生未知錯誤")
@@ -55,7 +55,7 @@ class PreschoolListViewModel: ObservableObject {
         state = .loading
         do {
             _allPreschools = try await _service.fetchPreschools()
-            applyFilter()
+            applyFilter(ignoreLoadingState: true)
         } catch let error as AppError {
             state = .error(error.errorDescription ?? "發生未知錯誤")
         } catch {
@@ -78,7 +78,8 @@ class PreschoolListViewModel: ObservableObject {
             .store(in: &_cancellables)
     }
 
-    private func applyFilter() {
+    private func applyFilter(ignoreLoadingState: Bool = false) {
+        if !ignoreLoadingState, case .loading = state { return }
         var result = _allPreschools
 
         if selectedType != .all {
