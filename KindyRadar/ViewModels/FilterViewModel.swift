@@ -11,6 +11,15 @@ class FilterViewModel: ObservableObject {
         self.onApply = onApply
     }
 
+    var availableDistricts: [String] {
+        pendingCriteria.city.districts
+    }
+
+    func selectCity(_ city: City) {
+        pendingCriteria.city = city
+        pendingCriteria.district = ""
+    }
+
     func apply() {
         onApply(pendingCriteria)
     }

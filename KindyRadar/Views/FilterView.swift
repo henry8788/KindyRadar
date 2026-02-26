@@ -21,12 +21,34 @@ struct FilterView: View {
                                 label: city.rawValue,
                                 isSelected: viewModel.pendingCriteria.city == city
                             ) {
-                                viewModel.pendingCriteria.city = city
+                                viewModel.selectCity(city)
                             }
                             if city != City.allCases.last {
                                 Divider().padding(.leading, 16)
                             }
                         }
+                    }
+
+                    // Section 1b：行政區（選了縣市才出現）
+                    if viewModel.pendingCriteria.city != .all && !viewModel.availableDistricts.isEmpty {
+                        FilterSection(title: "行政區") {
+                            FilterRow(
+                                label: "全部",
+                                isSelected: viewModel.pendingCriteria.district.isEmpty
+                            ) {
+                                viewModel.pendingCriteria.district = ""
+                            }
+                            ForEach(viewModel.availableDistricts, id: \.self) { district in
+                                Divider().padding(.leading, 16)
+                                FilterRow(
+                                    label: district,
+                                    isSelected: viewModel.pendingCriteria.district == district
+                                ) {
+                                    viewModel.pendingCriteria.district = district
+                                }
+                            }
+                        }
+                        .transition(.opacity.combined(with: .move(edge: .top)))
                     }
 
                     // Section 2：幼兒園類型
@@ -63,6 +85,7 @@ struct FilterView: View {
                     Color.clear.frame(height: 110)
                 }
                 .padding(.top, 32)
+                .animation(.easeInOut(duration: 0.25), value: viewModel.pendingCriteria.city)
             }
 
             // 底部固定按鈕
@@ -179,10 +202,6 @@ private struct FilterRow: View {
 
 #Preview("已選擇條件") {
     NavigationStack {
-        FilterView(current: FilterCriteria(
-            city: .taipei,
-            schoolType: .public_,
-            penaltyFilter: .clean
-        )) { _ in }
+        FilterView(current: FilterCriteria(city: .taipei, schoolType: .public_, penaltyFilter: .clean)) { _ in }
     }
 }

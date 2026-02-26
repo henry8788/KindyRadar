@@ -86,7 +86,12 @@ class PreschoolListViewModel: ObservableObject {
         }
 
         if filterCriteria.city != .all {
-            result = result.filter { $0.district.contains(filterCriteria.city.rawValue) }
+            result = result.filter { $0.district.hasPrefix(filterCriteria.city.rawValue) }
+        }
+
+        if !filterCriteria.district.isEmpty {
+            let expected = filterCriteria.city.rawValue + filterCriteria.district
+            result = result.filter { $0.district == expected }
         }
 
         switch filterCriteria.penaltyFilter {
