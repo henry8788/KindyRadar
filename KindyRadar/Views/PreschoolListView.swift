@@ -68,9 +68,16 @@ struct PreschoolListView: View {
                     onApply: { viewModel.applyFilterCriteria($0) }
                 )) {
                     ZStack(alignment: .topTrailing) {
-                        Text("篩選")
-                            .font(.system(size: 18, weight: .medium))
-                            .foregroundStyle(Color(hex: "#2094f3"))
+                        HStack(spacing: 4) {
+                            if viewModel.filterCriteria.city != .all {
+                                Text(viewModel.filterCriteria.city.rawValue)
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(Color(hex: "#2094f3"))
+                            }
+                            Text("篩選")
+                                .font(.system(size: 18, weight: .medium))
+                                .foregroundStyle(Color(hex: "#2094f3"))
+                        }
                         if viewModel.hasActiveFilter {
                             Circle()
                                 .fill(Color(hex: "#e53e3e"))
