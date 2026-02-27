@@ -7,7 +7,7 @@ A Taiwan preschool violation tracker iOS app. Parents can search preschools and 
 ## Tech Stack
 - SwiftUI + MVVM + Combine + async/await
 - iOS 16.0+, Xcode 16.4, Swift 5.10+
-- No external dependencies (pure Swift only)
+- Firebase iOS SDK（FirebaseMessaging、FirebaseFirestore）via Swift Package Manager
 
 ## Project Structure
 ```
@@ -48,14 +48,13 @@ MVVM with Combine:
 - 24-hour caching
 
 **Out of scope (v1.1):**
-- Push notifications
 - Map view
 - User accounts
 
 ## Constraints
 - MUST write all UI text in Traditional Chinese
-- MUST NOT use any third-party dependencies
 - MUST NOT use English in user-facing strings, error messages, or labels
+- Third-party: only Firebase iOS SDK is allowed（FirebaseMessaging、FirebaseFirestore）
 - NEVER suggest SwiftUI deprecated APIs (iOS 16.0 minimum)
 - NEVER use DispatchQueue — use async/await instead
 

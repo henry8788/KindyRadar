@@ -4,8 +4,35 @@ import Foundation
 class PreschoolDetailViewModel: ObservableObject {
     let preschool: Preschool
 
+    @Published var isSubscribed: Bool = false
+    @Published var isSubscriptionLoading: Bool = false
+    @Published var subscriptionError: String? = nil
+
+    private let _notificationService = NotificationService.shared
+
     init(preschool: Preschool) {
         self.preschool = preschool
+    }
+
+    func loadSubscriptionState() async {
+        isSubscribed = await _notificationService.isSubscribed(to: preschool.name)
+    }
+
+    func toggleSubscription() async {
+        isSubscriptionLoading = true
+        subscriptionError = nil
+        do {
+            if isSubscribed {
+                try await _notificationService.unsubscribe(from: preschool.name)
+                isSubscribed = false
+            } else {
+                try await _notificationService.subscribe(to: preschool.name)
+                isSubscribed = true
+            }
+        } catch {
+            subscriptionError = error.localizedDescription
+        }
+        isSubscriptionLoading = false
     }
 
     // MARK: - 格式化欄位

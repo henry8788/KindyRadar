@@ -35,6 +35,40 @@ struct PreschoolDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                subscribeButton
+            }
+        }
+        .task {
+            await viewModel.loadSubscriptionState()
+        }
+        .alert("訂閱失敗", isPresented: Binding(
+            get: { viewModel.subscriptionError != nil },
+            set: { if !$0 { viewModel.subscriptionError = nil } }
+        )) {
+            Button("確定", role: .cancel) {}
+        } message: {
+            Text(viewModel.subscriptionError ?? "")
+        }
+    }
+
+    // MARK: - 訂閱按鈕
+
+    private var subscribeButton: some View {
+        Button {
+            Task { await viewModel.toggleSubscription() }
+        } label: {
+            if viewModel.isSubscriptionLoading {
+                ProgressView()
+                    .tint(Color(hex: "#2094f3"))
+            } else {
+                Image(systemName: viewModel.isSubscribed ? "bell.fill" : "bell")
+                    .font(.system(size: 16))
+                    .foregroundStyle(viewModel.isSubscribed ? Color(hex: "#2094f3") : Color(hex: "#64748b"))
+            }
+        }
+        .disabled(viewModel.isSubscriptionLoading)
     }
 
     // MARK: - Hero Section（名稱、地址）
