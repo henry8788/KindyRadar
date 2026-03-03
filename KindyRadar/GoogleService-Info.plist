@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.app.KindyRadar</string>
+	<string>com.yiyan.KindyRadar</string>
 	<key>PROJECT_ID</key>
 	<string>kindyradar</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1066345532435:ios:de82842dc4194787cd83e6</string>
+	<string>1:1066345532435:ios:1576216b05442641cd83e6</string>
 </dict>
 </plist>

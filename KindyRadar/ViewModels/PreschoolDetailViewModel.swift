@@ -37,12 +37,6 @@ class PreschoolDetailViewModel: ObservableObject {
 
     // MARK: - 格式化欄位
 
-    var monthlyFeeText: String {
-        guard let fee = preschool.monthlyFee else { return "—" }
-        let formatted = NumberFormatter.localizedString(from: NSNumber(value: fee), number: .decimal)
-        return "$\(formatted)"
-    }
-
     var totalAreaText: String {
         guard let area = preschool.totalArea else { return "—" }
         let formatted = NumberFormatter.localizedString(from: NSNumber(value: area), number: .decimal)

@@ -4,6 +4,7 @@ import CoreLocation
 struct PreschoolListView: View {
     @StateObject private var viewModel = PreschoolListViewModel()
     @StateObject private var locationManager = LocationManager()
+    @ObservedObject private var alertStore = ViolationAlertStore.shared
 
     var body: some View {
         NavigationStack {
@@ -63,6 +64,26 @@ struct PreschoolListView: View {
 
                 Spacer()
 
+                // 裁罰通知按鈕
+                NavigationLink(destination: ViolationAlertView(
+                    preschools: alertStore.pendingPreschoolIds.compactMap { id in
+                        viewModel.allPreschools.first { $0.id == id }
+                    }
+                )) {
+                    ZStack(alignment: .topTrailing) {
+                        Text("裁罰通知")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundStyle(Color(hex: "#0f172a"))
+                        if alertStore.hasUnread {
+                            Circle()
+                                .fill(Color(hex: "#e53e3e"))
+                                .frame(width: 8, height: 8)
+                                .offset(x: 4, y: -2)
+                        }
+                    }
+                }
+                .padding(.trailing, 16)
+
                 NavigationLink(destination: FilterView(
                     current: viewModel.filterCriteria,
                     onApply: { viewModel.applyFilterCriteria($0) }
@@ -116,6 +137,27 @@ struct PreschoolListView: View {
                                 .font(.system(size: 12))
                         }
                         .foregroundStyle(Color(hex: "#2094f3"))
+                    } else if locationManager.authorizationStatus == .denied ||
+                              locationManager.authorizationStatus == .restricted {
+                        Button {
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                UIApplication.shared.open(url)
+                            }
+                        } label: {
+                            HStack(spacing: 5) {
+                                Image(systemName: "location.slash.fill")
+                                    .font(.system(size: 11))
+                                Text("開啟定位以依距離排序")
+                                    .font(.system(size: 12, weight: .medium))
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 10, weight: .semibold))
+                            }
+                            .foregroundStyle(Color.white)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(Color(hex: "#2094f3"))
+                            .clipShape(Capsule())
+                        }
                     }
                 }
                 .padding(.horizontal, 16)

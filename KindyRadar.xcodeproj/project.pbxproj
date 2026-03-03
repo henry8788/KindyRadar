@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BA93C7222F521332007C2514 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = BA93C7212F521332007C2514 /* FirebaseCore */; };
+		BA93C7242F52133E007C2514 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = BA93C7232F52133E007C2514 /* FirebaseMessaging */; };
+		BA93C7262F521349007C2514 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = BA93C7252F521349007C2514 /* FirebaseFirestore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		BA79B0F22F4C932300892F09 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +58,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA93C7242F52133E007C2514 /* FirebaseMessaging in Frameworks */,
+				BA93C7222F521332007C2514 /* FirebaseCore in Frameworks */,
+				BA93C7262F521349007C2514 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +87,7 @@
 				BA79B0E32F4C932100892F09 /* KindyRadar */,
 				BA79B0F42F4C932300892F09 /* KindyRadarTests */,
 				BA79B0FE2F4C932300892F09 /* KindyRadarUITests */,
+				BA93C7202F521332007C2514 /* Frameworks */,
 				BA79B0E22F4C932100892F09 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +100,13 @@
 				BA79B0FB2F4C932300892F09 /* KindyRadarUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		BA93C7202F521332007C2514 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,6 +129,9 @@
 			);
 			name = KindyRadar;
 			packageProductDependencies = (
+				BA93C7212F521332007C2514 /* FirebaseCore */,
+				BA93C7232F52133E007C2514 /* FirebaseMessaging */,
+				BA93C7252F521349007C2514 /* FirebaseFirestore */,
 			);
 			productName = KindyRadar;
 			productReference = BA79B0E12F4C932100892F09 /* KindyRadar.app */;
@@ -195,6 +215,9 @@
 			);
 			mainGroup = BA79B0D82F4C932100892F09;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BA93C71D2F521215007C2514 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BA79B0E22F4C932100892F09 /* Products */;
 			projectDirPath = "";
@@ -393,7 +416,7 @@
 				CODE_SIGN_ENTITLEMENTS = KindyRadar/KindyRadar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G2UTZ999W6;
+				DEVELOPMENT_TEAM = Z599PZ7MZ9;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -406,6 +429,7 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_CFBundleDisplayName = "幼兒園避雷";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
@@ -413,7 +437,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.KindyRadar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yiyan.KindyRadar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -433,7 +457,7 @@
 				CODE_SIGN_ENTITLEMENTS = KindyRadar/KindyRadar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G2UTZ999W6;
+				DEVELOPMENT_TEAM = Z599PZ7MZ9;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -446,6 +470,7 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_CFBundleDisplayName = "幼兒園避雷";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
@@ -453,7 +478,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.app.KindyRadar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yiyan.KindyRadar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -595,6 +620,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BA93C71D2F521215007C2514 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BA93C7212F521332007C2514 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BA93C71D2F521215007C2514 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		BA93C7232F52133E007C2514 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BA93C71D2F521215007C2514 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		BA93C7252F521349007C2514 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BA93C71D2F521215007C2514 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BA79B0D92F4C932100892F09 /* Project object */;
 }

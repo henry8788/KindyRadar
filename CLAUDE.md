@@ -8,6 +8,7 @@ A Taiwan preschool violation tracker iOS app. Parents can search preschools and 
 - SwiftUI + MVVM + Combine + async/await
 - iOS 16.0+, Xcode 16.4, Swift 5.10+
 - Firebase iOS SDK（FirebaseMessaging、FirebaseFirestore）via Swift Package Manager
+- Bundle ID: com.yiyan.KindyRadar
 
 ## Project Structure
 ```

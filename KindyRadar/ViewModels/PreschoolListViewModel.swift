@@ -26,7 +26,7 @@ class PreschoolListViewModel: ObservableObject {
     }
 
     private let _service: PreschoolServiceProtocol
-    private var _allPreschools: [Preschool] = []
+    private(set) var allPreschools: [Preschool] = []
     private var _cancellables = Set<AnyCancellable>()
 
     init(service: PreschoolServiceProtocol = PreschoolService()) {
@@ -40,7 +40,7 @@ class PreschoolListViewModel: ObservableObject {
         guard case .idle = state else { return }
         state = .loading
         do {
-            _allPreschools = try await _service.fetchPreschools()
+            allPreschools = try await _service.fetchPreschools()
             applyFilter(ignoreLoadingState: true)
         } catch let error as AppError {
             print("❌ [ViewModel] loadData error: \(error.errorDescription ?? "")")
@@ -54,7 +54,7 @@ class PreschoolListViewModel: ObservableObject {
     func refresh() async {
         state = .loading
         do {
-            _allPreschools = try await _service.fetchPreschools()
+            allPreschools = try await _service.fetchPreschools()
             applyFilter(ignoreLoadingState: true)
         } catch let error as AppError {
             state = .error(error.errorDescription ?? "發生未知錯誤")
@@ -80,7 +80,7 @@ class PreschoolListViewModel: ObservableObject {
 
     private func applyFilter(ignoreLoadingState: Bool = false) {
         if !ignoreLoadingState, case .loading = state { return }
-        var result = _allPreschools
+        var result = allPreschools
 
         if selectedType != .all {
             result = result.filter { $0.type == selectedType }

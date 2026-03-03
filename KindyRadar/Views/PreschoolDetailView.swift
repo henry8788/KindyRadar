@@ -3,6 +3,7 @@ import SwiftUI
 struct PreschoolDetailView: View {
     @StateObject private var viewModel: PreschoolDetailViewModel
     @Environment(\.openURL) private var openURL
+    @State private var showMapPicker = false
 
     init(preschool: Preschool) {
         _viewModel = StateObject(wrappedValue: PreschoolDetailViewModel(preschool: preschool))
@@ -17,12 +18,13 @@ struct PreschoolDetailView: View {
             ScrollView {
                 VStack(spacing: 0) {
                     heroSection
-                    infoSection
-                    facilitySection
-                    registrationSection
+                    violationBanner
                     if viewModel.hasViolations {
                         penaltySection
                     }
+                    infoSection
+                    facilitySection
+                    registrationSection
                     // 底部留白，避免被按鈕遮住
                     Color.clear.frame(height: 100)
                 }
@@ -90,14 +92,41 @@ struct PreschoolDetailView: View {
                 .foregroundStyle(Color(hex: "#0f172a"))
                 .tracking(-0.75)
 
-            // 地址
-            HStack(spacing: 8) {
-                Image(systemName: "mappin")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Color(hex: "#64748b"))
-                Text(school.fullAddress)
-                    .font(.system(size: 14))
-                    .foregroundStyle(Color(hex: "#64748b"))
+            // 地址（可點擊開地圖）
+            Button {
+                showMapPicker = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "mappin")
+                        .font(.system(size: 11))
+                        .foregroundStyle(Color(hex: "#2094f3"))
+                    Text(school.fullAddress)
+                        .font(.system(size: 14))
+                        .foregroundStyle(Color(hex: "#2094f3"))
+                        .underline()
+                    Image(systemName: "arrow.up.right")
+                        .font(.system(size: 11))
+                        .foregroundStyle(Color(hex: "#2094f3"))
+                }
+            }
+            .buttonStyle(.plain)
+            .confirmationDialog("選擇地圖", isPresented: $showMapPicker) {
+                Button("Apple 地圖") {
+                    let encoded = school.fullAddress.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                    if let url = URL(string: "maps://?q=\(encoded)") {
+                        openURL(url)
+                    }
+                }
+                Button("Google Maps") {
+                    let encoded = school.fullAddress.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                    if let url = URL(string: "comgooglemaps://?q=\(encoded)"),
+                       UIApplication.shared.canOpenURL(url) {
+                        openURL(url)
+                    } else if let url = URL(string: "https://maps.google.com/?q=\(encoded)") {
+                        openURL(url)
+                    }
+                }
+                Button("取消", role: .cancel) {}
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -118,18 +147,41 @@ struct PreschoolDetailView: View {
             .clipShape(Capsule())
     }
 
+    // MARK: - 裁罰狀態 Banner
+
+    private var violationBanner: some View {
+        let isClean = viewModel.preschool.violationStatus.isClean
+        return HStack(spacing: 12) {
+            Image(systemName: isClean ? "checkmark.shield.fill" : "exclamationmark.shield.fill")
+                .font(.system(size: 28))
+                .foregroundStyle(isClean ? Color(hex: "#16a34a") : Color(hex: "#dc2626"))
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(isClean ? "無裁罰紀錄" : "有裁罰紀錄")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(isClean ? Color(hex: "#16a34a") : Color(hex: "#dc2626"))
+                Text(isClean ? "此幼兒園目前無違規裁罰記錄" : "此幼兒園有 \(viewModel.preschool.violationStatus.label)，請見下方詳情")
+                    .font(.system(size: 13))
+                    .foregroundStyle(isClean ? Color(hex: "#15803d") : Color(hex: "#b91c1c"))
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .background(isClean ? Color(hex: "#f0fdf4") : Color(hex: "#fff1f2"))
+        .overlay(
+            Rectangle()
+                .frame(width: 4)
+                .foregroundStyle(isClean ? Color(hex: "#16a34a") : Color(hex: "#dc2626")),
+            alignment: .leading
+        )
+    }
+
     // MARK: - 基本資訊
 
     private var infoSection: some View {
         let school = viewModel.preschool
         return DetailSection(title: "基本資訊 Basic Info") {
-            InfoRow(
-                icon: "creditcard",
-                label: "每月學費",
-                value: viewModel.monthlyFeeText
-            )
-            Divider().padding(.leading, 72)
-
             InfoRow(
                 icon: "person",
                 label: "負責人",
@@ -281,6 +333,15 @@ struct PreschoolDetailView: View {
                             .foregroundStyle(Color(hex: "#334155"))
                             .lineSpacing(4)
                             .fixedSize(horizontal: false, vertical: true)
+                        // 條文摘要補充
+                        if let summary = LawArticleHelper.summary(for: violation.description) {
+                            Text("📋 \(summary)")
+                                .font(.system(size: 12))
+                                .foregroundStyle(Color(hex: "#64748b"))
+                                .lineSpacing(3)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.top, 4)
+                        }
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 16)

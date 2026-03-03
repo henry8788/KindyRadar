@@ -27,7 +27,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
+        print("✅ [AppDelegate] APNs token 收到，長度: \(deviceToken.count)")
         Messaging.messaging().apnsToken = deviceToken
+        Task {
+            await NotificationService.shared.fetchFCMToken()
+        }
     }
 
     func application(
@@ -45,7 +49,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 .requestAuthorization(options: [.alert, .badge, .sound])
             if granted {
                 await MainActor.run { application.registerForRemoteNotifications() }
-                await NotificationService.shared.fetchFCMToken()
                 print("✅ [AppDelegate] 推播權限已授權")
             } else {
                 print("⚠️ [AppDelegate] 使用者拒絕推播權限")
@@ -60,6 +63,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        print("✅ [AppDelegate] MessagingDelegate token: \(fcmToken ?? "nil")")
         guard let token = fcmToken else { return }
         Task { @MainActor in
             NotificationService.shared.fcmToken = token
@@ -75,7 +79,31 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
+        let content = notification.request.content
+        print("📩 [推播收到] title: \(content.title), body: \(content.body), userInfo: \(content.userInfo)")
+        handleViolationPayload(content.userInfo)
         return [.banner, .sound, .badge]
+    }
+
+    // 使用者點擊推播
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse
+    ) async {
+        let userInfo = response.notification.request.content.userInfo
+        print("👆 [推播點擊] userInfo: \(userInfo)")
+        handleViolationPayload(userInfo)
+    }
+
+    // MARK: - Private
+
+    private func handleViolationPayload(_ userInfo: [AnyHashable: Any]) {
+        guard let raw = userInfo["violationIds"] as? String else { return }
+        let ids = raw.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+        guard !ids.isEmpty else { return }
+        Task { @MainActor in
+            ViolationAlertStore.shared.add(ids: ids)
+        }
     }
 }
 
