@@ -52,34 +52,28 @@ struct PreschoolListView: View {
         VStack(spacing: 0) {
             // 標題列
             HStack {
-                HStack(spacing: 4) {
-                    Image(systemName: "mappin.circle.fill")
-                        .font(.system(size: 20))
-                        .foregroundStyle(Color(hex: "#e53e3e"))
-
-                    Text("園所雷達")
-                        .font(.system(size: 24, weight: .semibold))
-                        .foregroundStyle(Color(hex: "#0f172a"))
-                }
+                Text("幼兒園查詢")
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundStyle(Color(hex: "#0f172a"))
 
                 Spacer()
 
                 // 裁罰通知按鈕
                 NavigationLink(destination: ViolationAlertView(
-                    preschools: alertStore.pendingPreschoolIds.compactMap { id in
-                        viewModel.allPreschools.first { $0.id == id }
-                    }
+                    allPreschools: viewModel.allPreschools
                 )) {
                     ZStack(alignment: .topTrailing) {
-                        Text("裁罰通知")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundStyle(Color(hex: "#0f172a"))
-                        if alertStore.hasUnread {
-                            Circle()
-                                .fill(Color(hex: "#e53e3e"))
-                                .frame(width: 8, height: 8)
-                                .offset(x: 4, y: -2)
+                        HStack(spacing: 5) {
+                            Image(systemName: alertStore.hasUnread ? "bell.badge.fill" : "bell.fill")
+                                .font(.system(size: 14))
+                            Text("最新裁罰")
+                                .font(.system(size: 14, weight: .medium))
                         }
+                        .foregroundStyle(alertStore.hasUnread ? Color.white : Color(hex: "#475569"))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(alertStore.hasUnread ? Color(hex: "#e53e3e") : Color(hex: "#f1f5f9"))
+                        .clipShape(Capsule())
                     }
                 }
                 .padding(.trailing, 16)

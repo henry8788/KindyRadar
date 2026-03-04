@@ -66,7 +66,7 @@ extension AppDelegate: MessagingDelegate {
         print("✅ [AppDelegate] MessagingDelegate token: \(fcmToken ?? "nil")")
         guard let token = fcmToken else { return }
         Task { @MainActor in
-            NotificationService.shared.fcmToken = token
+            await NotificationService.shared.updateToken(token)
         }
     }
 }
@@ -112,6 +112,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 @main
 struct KindyRadarApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @State private var isLaunching = true
 
     init() {
         CacheManager.shared.clearAll()
@@ -119,7 +120,17 @@ struct KindyRadarApp: App {
 
     var body: some Scene {
         WindowGroup {
-            PreschoolListView()
+            if isLaunching {
+                LaunchScreenView()
+                    .task {
+                        try? await Task.sleep(for: .seconds(1.5))
+                        withAnimation(.easeOut(duration: 0.4)) {
+                            isLaunching = false
+                        }
+                    }
+            } else {
+                PreschoolListView()
+            }
         }
     }
 }
