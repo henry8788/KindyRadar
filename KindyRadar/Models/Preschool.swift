@@ -44,7 +44,9 @@ enum ViolationStatus: Codable {
 
 // MARK: - 幼兒園
 
-struct Preschool: Identifiable, Codable {
+struct Preschool: Identifiable, Codable, Hashable {
+    func hash(into hasher: inout Hasher) { hasher.combine(id) }
+    static func == (lhs: Preschool, rhs: Preschool) -> Bool { lhs.id == rhs.id }
     let id: String
     let name: String
     let district: String

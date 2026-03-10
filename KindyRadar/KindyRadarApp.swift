@@ -129,7 +129,7 @@ struct KindyRadarApp: App {
                         }
                     }
             } else {
-                PreschoolListView()
+                MainTabView()
             }
         }
     }

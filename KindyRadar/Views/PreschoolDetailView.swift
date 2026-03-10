@@ -39,7 +39,10 @@ struct PreschoolDetailView: View {
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                subscribeButton
+                HStack(spacing: 4) {
+                    shareButton
+                    subscribeButton
+                }
             }
         }
         .task {
@@ -52,6 +55,28 @@ struct PreschoolDetailView: View {
             Button("確定", role: .cancel) {}
         } message: {
             Text(viewModel.subscriptionError ?? "")
+        }
+    }
+
+    // MARK: - 分享按鈕
+
+    private var shareButton: some View {
+        let school = viewModel.preschool
+        let violationText = school.violationStatus.isClean
+            ? "✅ 無裁罰紀錄"
+            : "⚠️ 有裁罰紀錄（\(school.violationStatus.label)）"
+        let shareText = """
+        【幼兒園避雷】\(school.name)
+        📍 \(school.fullAddress)
+        🏷 類型：\(school.type.rawValue)
+        \(violationText)
+
+        資料來源：教育部幼兒園基本資料
+        """
+        return ShareLink(item: shareText) {
+            Image(systemName: "square.and.arrow.up")
+                .font(.system(size: 16))
+                .foregroundStyle(Color(hex: "#64748b"))
         }
     }
 
@@ -483,6 +508,7 @@ private struct RegistrationRow: View {
 
 // MARK: - Preview
 
+#if DEBUG
 #Preview {
     NavigationStack {
         PreschoolDetailView(preschool: Preschool.mockData[0])
@@ -494,3 +520,4 @@ private struct RegistrationRow: View {
         PreschoolDetailView(preschool: Preschool.mockData[1])
     }
 }
+#endif

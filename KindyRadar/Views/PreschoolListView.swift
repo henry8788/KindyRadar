@@ -2,14 +2,12 @@ import SwiftUI
 import CoreLocation
 
 struct PreschoolListView: View {
-    @StateObject private var viewModel = PreschoolListViewModel()
-    @StateObject private var locationManager = LocationManager()
+    @ObservedObject var viewModel: PreschoolListViewModel
+    @ObservedObject var locationManager: LocationManager
     @ObservedObject private var alertStore = ViolationAlertStore.shared
 
     var body: some View {
-        NavigationStack {
-            listBody
-        }
+        listBody
     }
 
     private var listBody: some View {
@@ -37,7 +35,6 @@ struct PreschoolListView: View {
             headerView
         }
         .task {
-            locationManager.requestLocation()
             await viewModel.loadData()
         }
         .onChange(of: locationManager.userLocation) { _, newLocation in
@@ -269,12 +266,14 @@ private struct TypeFilterChip: View {
 
 // MARK: - Preview
 
-#Preview("正常資料") {
-    PreschoolListView()
+#if DEBUG
+#Preview("正常資料") { @MainActor in
+    PreschoolListView(viewModel: PreschoolListViewModel(), locationManager: LocationManager())
 }
 
-#Preview("深色模式") {
-    PreschoolListView()
+#Preview("深色模式") { @MainActor in
+    PreschoolListView(viewModel: PreschoolListViewModel(), locationManager: LocationManager())
         .preferredColorScheme(.dark)
 }
+#endif
 

@@ -101,6 +101,7 @@ extension Color {
 
 // MARK: - Preview
 
+#if DEBUG
 #Preview {
     VStack(spacing: 12) {
         ForEach(Preschool.mockData) { preschool in
@@ -110,3 +111,4 @@ extension Color {
     .padding()
     .background(Color(hex: "#f2f2f7"))
 }
+#endif
